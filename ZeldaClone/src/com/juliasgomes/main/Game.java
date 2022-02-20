@@ -6,8 +6,14 @@ import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.image.BufferStrategy;
 import java.awt.image.BufferedImage;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.swing.JFrame;
+
+import com.juliasgomes.entities.Entity;
+import com.juliasgomes.entities.Player;
+import com.juliasgomes.graficos.Spritesheet;
 
 public class Game extends Canvas implements Runnable {
 	
@@ -21,10 +27,19 @@ public class Game extends Canvas implements Runnable {
 	
 	private BufferedImage image;
 	
+	public List<Entity> entities;
+	public Spritesheet spritesheet;
+	
 	public Game() {
 		setPreferredSize(new Dimension(WIDTH*SCALE, HEIGHT*SCALE));
 		initFrame();
+		//Initiating objects
 		image = new BufferedImage(WIDTH,HEIGHT,BufferedImage.TYPE_INT_RGB);
+		entities = new ArrayList<Entity>();
+		spritesheet = new Spritesheet("/spritesheet.png");
+		
+		Player player = new Player(0,0,16,16,spritesheet.getSprite(32, 0, 16, 16));
+		entities.add(player);
 	}
 	
 	public void initFrame() {
@@ -58,7 +73,10 @@ public class Game extends Canvas implements Runnable {
 	}
 	
 	public void tick() {
-		
+		for(int i = 0; i < entities.size(); i++) {
+			Entity e = entities.get(i);
+			e.tick();
+		}
 	}
 
 	public void render() {
@@ -68,15 +86,20 @@ public class Game extends Canvas implements Runnable {
 			return;
 		}
 		Graphics g = image.getGraphics();
-		g.setColor(new Color(0,0,255));
+		g.setColor(new Color(0,0,0));
 		g.fillRect(0,0,WIDTH,HEIGHT);
 		
 		/*Game Rendering*/
 		//Graphics2D g2 = (Graphics2D) g;
 		
+		for(int i = 0; i < entities.size(); i++) {
+			Entity e = entities.get(i);
+			e.render(g);
+		}
+		
 		g.dispose();
 		g = bs.getDrawGraphics();
-		g.drawImage(image,0,0,WIDTH*SCALE,HEIGHT*SCALE,null);
+		g.drawImage(image, 0, 0, WIDTH*SCALE, HEIGHT*SCALE, null);
 		bs.show();
 	}
 	
