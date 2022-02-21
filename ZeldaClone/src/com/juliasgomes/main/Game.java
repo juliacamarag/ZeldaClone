@@ -30,7 +30,7 @@ public class Game extends Canvas implements Runnable, KeyListener {
 	private BufferedImage image;
 	
 	public List<Entity> entities;
-	public Spritesheet spritesheet;
+	public static Spritesheet spritesheet;
 	
 	private Player player;
 	
@@ -82,8 +82,7 @@ public class Game extends Canvas implements Runnable, KeyListener {
 			e.tick();
 		}
 	}
-
-	public void render() {
+  void render() {
 		BufferStrategy bs = this.getBufferStrategy();
 		if(bs == null) {
 			this.createBufferStrategy(3);
