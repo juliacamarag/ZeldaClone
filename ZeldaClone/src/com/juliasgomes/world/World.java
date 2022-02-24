@@ -12,8 +12,9 @@ import com.juliasgomes.main.Game;
 
 public class World {
 	
-	private Tile[] tiles;
+	public static Tile[] tiles;
 	public static int WIDTH, HEIGHT;
+	public static final int TILE_SIZE = 16;
 	
 	public World(String path) {
 		try {
@@ -25,27 +26,36 @@ public class World {
 			map.getRGB(0,0,map.getWidth(),map.getHeight(), pixels, 0, map.getWidth());
 			for(int xx = 0; xx < map.getWidth(); xx++) {
 				for(int yy = 0; yy < map.getHeight(); yy++) {
+					
 					int curPixel = pixels[xx + (yy * map.getWidth())];
+					
 					tiles[xx + (yy * WIDTH)] = new FloorTile(xx * 16,yy * 16, Tile.TILE_FLOOR);
+					
 					if(curPixel == 0xFF000000) {
 						//Floor
 						tiles[xx + (yy * WIDTH)] = new FloorTile(xx * 16,yy * 16, Tile.TILE_FLOOR);
+						
 					}else if(curPixel == 0xFFFFFFFF) {
 						//Wall
-						tiles[xx + (yy * WIDTH)] = new FloorTile(xx * 16, yy * 16, Tile.TILE_WALL);
+						tiles[xx + (yy * WIDTH)] = new WallTile(xx * 16, yy * 16, Tile.TILE_WALL);
+						
 					}else if (curPixel == 0xFF0000FF) {
 						//Player
 						Game.player.setX(xx*16);
 						Game.player.setY(yy * 16);
+						
 					}else if(curPixel == 0xFFFF0000) {
 						//Enemy
 						Game.entities.add(new Enemy(xx*16,yy*16,16,16,Entity.ENEMY_EN));
+						
 					}else if(curPixel == 0xFFFF00FF) {
 						//Weapon
 						Game.entities.add(new Weapon(xx*16,yy*16,16,16,Entity.WEAPON_EN));
+						
 					}else if(curPixel == 0XFFFFFF00) {
 						//Bullet
 						Game.entities.add(new Bullet(xx*16,yy*16,16,16,Entity.BULLET_EN));
+						
 					}else if(curPixel == 0xFF00FF00) {
 						//Life Pack
 						Game.entities.add(new LifePack(xx*16,yy*16,16,16,Entity.LIFEPACK_EN));
@@ -56,6 +66,25 @@ public class World {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+	}
+	
+	public static boolean isFree(int xnext, int ynext) {
+		int x1 = xnext / TILE_SIZE;
+		int y1 = ynext / TILE_SIZE;
+		
+		int x2 = (xnext + TILE_SIZE - 1) / TILE_SIZE;
+		int y2 = ynext / TILE_SIZE;
+		
+		int x3 = xnext / TILE_SIZE;
+		int y3 = (ynext + TILE_SIZE - 1) / TILE_SIZE;
+		
+		int x4 = (xnext + TILE_SIZE - 1) / TILE_SIZE;
+		int y4 = (ynext + TILE_SIZE - 1) / TILE_SIZE;
+		
+		return !((tiles[x1 + (y1 * World.WIDTH)] instanceof WallTile) ||
+				(tiles[x2 + (y2 * World.WIDTH)] instanceof WallTile) ||
+				(tiles[x3 + (y3 * World.WIDTH)] instanceof WallTile) ||
+				(tiles[x4 + (y4 * World.WIDTH)] instanceof WallTile));
 	}
 	
 	public void render(Graphics g) {
