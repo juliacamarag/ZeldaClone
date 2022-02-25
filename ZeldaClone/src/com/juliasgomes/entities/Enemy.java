@@ -15,27 +15,72 @@ public class Enemy extends Entity{
 	
 	private int maskX = 1, maskY = 2, maskW = 14, maskH = 14;
 	
+	private int frames = 0, maxFrames = 5, index = 0, maxIndex = 3;
+	
+	public int right_dir = 0,left_dir = 1,up_dir = 2,down_dir = 3;
+	public int dir = right_dir;
+	
+	private BufferedImage[] rightEnemy;
+	private BufferedImage[] leftEnemy;
+	private BufferedImage[] downEnemy;
+	private BufferedImage[] upEnemy;
+	
+	
 	public Enemy(int x, int y, int width, int height, BufferedImage sprite) {
-		super(x, y, width, height, sprite);
+		super(x, y, width, height, null);
 		
+		rightEnemy = new BufferedImage[4];
+		leftEnemy = new BufferedImage[4];
+		upEnemy = new BufferedImage[4];
+		downEnemy = new BufferedImage[4];
+		
+		for(int i = 0; i < 4; i++) {
+			rightEnemy[i] = Game.spritesheet.getSprite(32 + (i * 16), 64, 16, 16);
+		}
+		
+		for(int i = 0; i < 4; i++) {
+			leftEnemy[i] = Game.spritesheet.getSprite(32 + (i * 16), 80, 16, 16);
+		}
+		
+		for(int i = 0; i < 4; i ++) {
+			upEnemy[i] = Game.spritesheet.getSprite(32 + (i * 16), 96, 16, 16);
+		}
+		
+		for(int i = 0; i < 4; i ++) {
+			downEnemy[i] = Game.spritesheet.getSprite(32 + (i * 16),112,16,16);
+		}
 	}
 	
 	public void tick() {
 		if ((int)x < Game.player.getX() && World.isFree((int)(x+speed), this.getY())
 				&& !isColliding((int)(x+speed),this.getY())) {
+			dir = left_dir;
 			x+=speed;
+			
 		}else if((int)x > Game.player.getX() && World.isFree((int)(x-speed), this.getY())
 				&& !isColliding((int)(x-speed),this.getY())) {
+			dir = right_dir;
 			x-=speed;
 		}
 		
 		if ((int)y < Game.player.getY() && World.isFree(this.getX(), (int)(y + speed))
 				&& !isColliding(this.getX(), (int)(y+speed))) {
+			dir = down_dir;
 			y+=speed;
 			
 		}else if((int)y > Game.player.getY() && World.isFree(this.getX(), (int)(y - speed))
 				&& !isColliding(this.getX(),(int)(y-speed))) {
+			dir = up_dir;
 			y-=speed;
+		}
+	
+	
+		frames++;
+		if(frames == maxFrames) {
+			frames = 0;
+			index++;
+			if(index > maxIndex)
+				index = 0;
 		}
 	}
 	
@@ -57,7 +102,16 @@ public class Enemy extends Entity{
 	}
 
 	public void render(Graphics g) {
-		super.render(g);
+		if(dir == right_dir) {
+			g.drawImage(rightEnemy[index], this.getX()- Camera.x, this.getY()- Camera.y, null);
+		}else if(dir == left_dir) {
+			g.drawImage(leftEnemy[index], this.getX()- Camera.x, this.getY() - Camera.y, null);
+		}
+		if(dir == up_dir) {
+			g.drawImage(upEnemy[index],this.getX() - Camera.x, this.getY() - Camera.y, null);
+		}else if(dir == down_dir) {
+			g.drawImage(downEnemy[index], this.getX() - Camera.x, this.getY() - Camera.y, null);
+		}
 		//g.setColor(Color.blue);
 		//g.fillRect(this.getX() + maskX - Camera.x, this.getY() + maskY - Camera.y, maskW, maskH);
 	}
