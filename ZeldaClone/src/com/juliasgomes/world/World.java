@@ -46,7 +46,10 @@ public class World {
 						
 					}else if(curPixel == 0xFFFF0000) {
 						//Enemy
-						Game.entities.add(new Enemy(xx*16,yy*16,16,16,Entity.ENEMY_EN));
+						Enemy en = new Enemy(xx*16,yy*16,16,16,Entity.ENEMY_EN);
+						Game.entities.add(en);
+						Game.enemies.add(en);
+						//Game.entities.add(new Enemy(xx*16,yy*16,16,16,Entity.ENEMY_EN));
 						
 					}else if(curPixel == 0xFFFF00FF) {
 						//Weapon
