@@ -22,7 +22,7 @@ public class Player extends Entity{
 	private BufferedImage[] downPlayer;
 	private BufferedImage[] upPlayer;
 	
-	public int life = 100;
+	public static double life = 100, maxlife = 100;
 	
 	
 	
