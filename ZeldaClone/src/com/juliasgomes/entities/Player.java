@@ -1,5 +1,6 @@
 package com.juliasgomes.entities;
 
+import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.image.BufferedImage;
 
@@ -13,6 +14,7 @@ public class Player extends Entity{
 	public int right_dir = 0,left_dir = 1,up_dir = 2,down_dir = 3;
 	public int dir = right_dir;
 	public double speed = 1.4;
+	private int maskX = 1, maskY = 1, maskW = 10, maskH = 10;
 	
 	private int frames = 0,maxFrames = 5, index = 0, maxIndex = 3;
 	private boolean moved = false;
@@ -50,22 +52,22 @@ public class Player extends Entity{
 	
 	public void tick() {
 		moved = false;
-		if(right && World.isFree((int)(x+speed),this.getY())) {
+		if(right && World.isFree((int)(this.getX()+speed),this.getY())) {
 			moved = true;
 			dir = right_dir;
 			x+= speed;
 		}
-		else if(left && World.isFree((int)(x-speed),this.getY())) {
+		else if(left && World.isFree((int)(this.getX()-speed),this.getY())) {
 			moved = true;
 			dir = left_dir;
 			x-= speed;
 		}
-		if(up && World.isFree(this.getX(), (int)(y-speed))) {
+		if(up && World.isFree(this.getX(), (int)(this.getY() -speed))) {
 			moved = true;
 			dir = up_dir;
 			y-=speed;
 		}
-		else if(down && World.isFree(this.getX(), (int)(y+speed))) {
+		else if(down && World.isFree(this.getX() , (int)(this.getY() +speed))) {
 			moved = true;
 			dir = down_dir;
 			y+=speed;
@@ -86,10 +88,11 @@ public class Player extends Entity{
 	}
 	
 	public void render(Graphics g) {
+
 		if(dir == right_dir) {
-			g.drawImage(rightPlayer[index], this.getX() - Camera.x, this.getY() - Camera.y, null);
+			g.drawImage(rightPlayer[index], this.getX()- Camera.x, this.getY()- Camera.y, null);
 		}else if(dir == left_dir) {
-			g.drawImage(leftPlayer[index], this.getX() - Camera.x, this.getY() - Camera.y, null);
+			g.drawImage(leftPlayer[index], this.getX()- Camera.x, this.getY() - Camera.y, null);
 		}
 		if(dir == up_dir) {
 			g.drawImage(upPlayer[index],this.getX() - Camera.x, this.getY() - Camera.y, null);
