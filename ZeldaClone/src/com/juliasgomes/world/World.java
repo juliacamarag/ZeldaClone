@@ -61,7 +61,9 @@ public class World {
 						
 					}else if(curPixel == 0xFF00FF00) {
 						//Life Pack
-						Game.entities.add(new LifePack(xx*16,yy*16,16,16,Entity.LIFEPACK_EN));
+						LifePack pack = new LifePack(xx*16, yy*16,16,16,Entity.LIFEPACK_EN);
+						pack.setMask(4, 6, 7, 10);
+						Game.entities.add(pack);
 					}
 				}
 				
