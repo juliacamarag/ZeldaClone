@@ -1,6 +1,8 @@
 package com.juliasgomes.entities;
 
+import java.awt.Color;
 import java.awt.Graphics;
+import java.awt.Rectangle;
 import java.awt.image.BufferedImage;
 
 import com.juliasgomes.main.Game;
@@ -20,12 +22,27 @@ public class Entity {
 	
 	private BufferedImage sprite;
 	
+	private int maskX, maskY, mWidth, mHeight;
+	
 	public Entity(int x, int y, int width, int height, BufferedImage sprite) {
 		this.x = x;
 		this.y = y;
 		this.width = width;
 		this.height = height;
 		this.sprite = sprite;
+		
+		this.maskX = 0;
+		this.maskY = 0;
+		this.mWidth = width;
+		this.mHeight = height;
+	}
+	
+	public void setMask(int maskX, int maskY, int mWidth, int mHeight) {
+		this.maskX = maskX;
+		this.maskY = maskY;
+		this.mWidth = mWidth;
+		this.mHeight = mHeight;
+		
 	}
 	
 	public void setX(int newX) {
@@ -56,8 +73,17 @@ public class Entity {
 		
 	}
 	
+	public static boolean isColliding(Entity e1, Entity e2) {
+		Rectangle e1Mask = new Rectangle(e1.getX() + e1.maskX, e1.getY() + e1.maskY, e1.mWidth, e1.mHeight);
+		Rectangle e2Mask = new Rectangle(e2.getX() + e2.maskX, e2.getY() + e2.maskY, e2.mWidth, e2.mHeight);
+		
+		return e1Mask.intersects(e2Mask);
+	}
+	
 	public void render(Graphics g) {
 		g.drawImage(sprite, this.getX() - Camera.x, this.getY() - Camera.y,null);
+		//g.setColor(Color.red);
+		//g.fillRect(this.getX() + maskX - Camera.x, this.getY() + maskY - Camera.y, mWidth, mHeight);
 	}
 	
 }
