@@ -11,9 +11,19 @@ import com.juliasgomes.world.Camera;
 public class Entity {
 	
 	public static BufferedImage LIFEPACK_EN = Game.spritesheet.getSprite(6*16,0,16,16);
-	public static BufferedImage WEAPON_EN = Game.spritesheet.getSprite(7*16, 0, 16, 16);
+	public static BufferedImage WEAPON_EN = Game.spritesheet.getSprite(8*16, 0, 16, 16);
 	public static BufferedImage BULLET_EN = Game.spritesheet.getSprite(6*16, 16, 16, 16);
 	public static BufferedImage ENEMY_EN = Game.spritesheet.getSprite(7*16, 16, 16, 16);
+	
+	public static BufferedImage WEAPON_RIGHT = Game.spritesheet.getSprite(144,0,16,16);
+	public static BufferedImage WEAPON_LEFT = Game.spritesheet.getSprite(112,16,16,16);
+	public static BufferedImage WEAPON_UP = Game.spritesheet.getSprite(128, 16, 16, 16);
+	public static BufferedImage WEAPON_DOWN = Game.spritesheet.getSprite(144, 16, 16, 16);
+	
+	public static BufferedImage Damage_Weapon_RIGHT = Game.spritesheet.getSprite(96,48,16,16);
+	public static BufferedImage Damage_Weapon_LEFT = Game.spritesheet.getSprite(112,48,16,16);
+	public static BufferedImage Damage_Weapon_UP = Game.spritesheet.getSprite(128,48,16,16);
+	public static BufferedImage Damage_Weapon_DOWN = Game.spritesheet.getSprite(144,48,16,16);
 
 	protected double x;
 	protected double y;
