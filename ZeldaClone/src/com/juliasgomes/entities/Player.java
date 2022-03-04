@@ -36,6 +36,8 @@ public class Player extends Entity{
 	public boolean isDamaged = false;
 	private int damageFrames = 0;
 	
+	public boolean shoot = false;
+	
 	public double life = 100, maxlife = 100;
 	
 	
@@ -114,6 +116,37 @@ public class Player extends Entity{
 			if(this.damageFrames == 8) {
 				this.damageFrames = 0;
 				isDamaged = false;
+			}
+		}
+		
+		if(shoot) {
+			shoot = false;
+			if (hasGun && ammo > 0) {
+				ammo--;
+				int dx = 0;
+				int dy = 0;
+				int px = 2;
+				int py = 10;
+				
+				if(dir == right_dir) {
+					px = 10;
+					dx = 1;
+				}else if (dir == left_dir) {
+					px = 0;
+					dx = -1;
+				}
+				if(dir == up_dir) {
+					px = 10;
+					py = 3;
+					dy = -1;
+				}else if (dir == down_dir){
+					px = 3;
+					py = 15;
+					dy = 1;
+				}
+				
+				BulletShoot bullet = new BulletShoot(this.getX() + px, this.getY() + py, 3,3,null,dx,dy);
+				Game.bullets.add(bullet);
 			}
 		}
 		
