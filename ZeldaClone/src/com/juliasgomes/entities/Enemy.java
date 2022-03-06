@@ -11,7 +11,7 @@ import com.juliasgomes.world.World;
 
 public class Enemy extends Entity{
 
-	private double speed = 0.5;
+	private double speed = 0.4;
 	
 	private int maskX = 1, maskY = 2, maskW = 14, maskH = 14;
 	
@@ -25,6 +25,7 @@ public class Enemy extends Entity{
 	private BufferedImage[] downEnemy;
 	private BufferedImage[] upEnemy;
 	
+	private int life = 10;
 	
 	public Enemy(int x, int y, int width, int height, BufferedImage sprite) {
 		super(x, y, width, height, null);
@@ -90,6 +91,32 @@ public class Enemy extends Entity{
 			if(index > maxIndex)
 				index = 0;
 		}
+		
+		isCollidingWithBullet();
+		
+		if(life <= 0) {
+			destroySelf();
+			return;
+		}
+		
+	}
+	
+	public void destroySelf() {
+		Game.entities.remove(this);
+	}
+	
+	public void isCollidingWithBullet() {
+		for(int i = 0; i < Game.bullets.size(); i++) {
+			Entity e = Game.bullets.get(i);
+			if(e instanceof BulletShoot) {
+				if(Entity.isColliding(this, e)) {
+					life --;
+					Game.bullets.remove(i);
+					return;
+				}
+			}
+		}
+
 	}
 	
 	public boolean isCollidingWithPlayer() {
