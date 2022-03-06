@@ -181,7 +181,7 @@ public class Player extends Entity{
 			Entity current = Game.entities.get(i);
 			if(current instanceof Bullet) {
 				if(Entity.isColliding(this, current)) {
-					ammo+=10;
+					ammo+=100;
 					Game.entities.remove(current);
 				}
 			}
