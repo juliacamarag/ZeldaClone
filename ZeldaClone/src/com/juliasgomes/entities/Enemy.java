@@ -25,7 +25,14 @@ public class Enemy extends Entity{
 	private BufferedImage[] downEnemy;
 	private BufferedImage[] upEnemy;
 	
+	private BufferedImage rightEnemy_FEEDBACK;
+	private BufferedImage leftEnemy_FEEDBACK;
+	private BufferedImage up_downEnemy_FEEDBACK;
+	
 	private int life = 10;
+	
+	private boolean isDamaged = false;
+	private int damageFrames = 10, damageCurrent = 0;
 	
 	public Enemy(int x, int y, int width, int height, BufferedImage sprite) {
 		super(x, y, width, height, null);
@@ -34,6 +41,11 @@ public class Enemy extends Entity{
 		leftEnemy = new BufferedImage[4];
 		upEnemy = new BufferedImage[4];
 		downEnemy = new BufferedImage[4];
+		
+		rightEnemy_FEEDBACK = Game.spritesheet.getSprite(96, 64, 16, 16);
+		leftEnemy_FEEDBACK = Game.spritesheet.getSprite(112, 64, 16, 16);
+		up_downEnemy_FEEDBACK = Game.spritesheet.getSprite(128, 64, 16, 16);
+		
 		
 		for(int i = 0; i < 4; i++) {
 			rightEnemy[i] = Game.spritesheet.getSprite(32 + (i * 16), 64, 16, 16);
@@ -99,6 +111,14 @@ public class Enemy extends Entity{
 			return;
 		}
 		
+		if(isDamaged) {
+			this.damageCurrent ++;
+			if(this.damageCurrent == this.damageFrames) {
+				this.damageCurrent = 0;
+				this.isDamaged = false;
+			}
+		}
+		
 	}
 	
 	public void destroySelf() {
@@ -110,6 +130,7 @@ public class Enemy extends Entity{
 			Entity e = Game.bullets.get(i);
 			if(e instanceof BulletShoot) {
 				if(Entity.isColliding(this, e)) {
+					isDamaged = true;
 					life --;
 					Game.bullets.remove(i);
 					return;
@@ -144,15 +165,28 @@ public class Enemy extends Entity{
 	}
 
 	public void render(Graphics g) {
-		if(dir == right_dir) {
-			g.drawImage(rightEnemy[index], this.getX()- Camera.x, this.getY()- Camera.y, null);
-		}else if(dir == left_dir) {
-			g.drawImage(leftEnemy[index], this.getX()- Camera.x, this.getY() - Camera.y, null);
-		}
-		if(dir == up_dir) {
-			g.drawImage(upEnemy[index],this.getX() - Camera.x, this.getY() - Camera.y, null);
-		}else if(dir == down_dir) {
-			g.drawImage(downEnemy[index], this.getX() - Camera.x, this.getY() - Camera.y, null);
+		if(!isDamaged) {
+			if(dir == right_dir) {
+				g.drawImage(rightEnemy[index], this.getX()- Camera.x, this.getY()- Camera.y, null);
+			}else if(dir == left_dir) {
+				g.drawImage(leftEnemy[index], this.getX()- Camera.x, this.getY() - Camera.y, null);
+			}
+			if(dir == up_dir) {
+				g.drawImage(upEnemy[index],this.getX() - Camera.x, this.getY() - Camera.y, null);
+			}else if(dir == down_dir) {
+				g.drawImage(downEnemy[index], this.getX() - Camera.x, this.getY() - Camera.y, null);
+			}
+		}else {
+			if(dir == right_dir) {
+				g.drawImage(rightEnemy_FEEDBACK, this.getX()- Camera.x, this.getY()- Camera.y, null);
+			}else if(dir == left_dir) {
+				g.drawImage(leftEnemy_FEEDBACK, this.getX()- Camera.x, this.getY() - Camera.y, null);
+			}
+			if(dir == up_dir) {
+				g.drawImage(up_downEnemy_FEEDBACK,this.getX() - Camera.x, this.getY() - Camera.y, null);
+			}else if(dir == down_dir) {
+				g.drawImage(up_downEnemy_FEEDBACK, this.getX() - Camera.x, this.getY() - Camera.y, null);
+			}
 		}
 		//g.setColor(Color.blue);
 		//g.fillRect(this.getX() + maskX - Camera.x, this.getY() + maskY - Camera.y, maskW, maskH);
