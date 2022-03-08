@@ -11,7 +11,7 @@ import com.juliasgomes.world.World;
 
 public class Enemy extends Entity{
 
-	private double speed = 0.4;
+	private double speed = Game.rand.nextDouble (0.4,1);
 	
 	private int maskX = 1, maskY = 2, maskW = 14, maskH = 14;
 	
@@ -90,7 +90,7 @@ public class Enemy extends Entity{
 		}else {
 			//Colliding
 			if(Game.rand.nextInt(100) < 10) {
-				Game.player.life-=Game.rand.nextInt(3);
+				Game.player.life-=Game.rand.nextInt(5, 8);
 				Game.player.isDamaged = true;
 			}
 		}
