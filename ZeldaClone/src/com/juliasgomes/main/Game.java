@@ -32,7 +32,7 @@ public class Game extends Canvas implements Runnable, KeyListener {
 	private boolean isRunning = true;
 	public static final int WIDTH = 240;
 	public static final int HEIGHT = 160;
-	private final int SCALE = 3;
+	public static final int SCALE = 3;
 	
 	private int CUR_LEVEL = 1, MAX_LEVEL = 2;
 	private BufferedImage image;
@@ -50,10 +50,12 @@ public class Game extends Canvas implements Runnable, KeyListener {
 	
 	public UI ui;
 	
-	public static String gameState = "NORMAL";
+	public static String gameState = "MENU";
 	private boolean showMessageGameOver = true;
 	private int framesGameOver = 0;
 	private boolean restartGame = false;
+	
+	public Menu menu;
 	
 	public Game() {
 		rand = new Random();
@@ -66,15 +68,17 @@ public class Game extends Canvas implements Runnable, KeyListener {
 		entities = new ArrayList<Entity>();
 		enemies = new ArrayList<Enemy>();
 		bullets = new ArrayList<BulletShoot>();
+		
 		spritesheet = new Spritesheet("/spritesheet.png");
 		player = new Player(0,0,16,16,spritesheet.getSprite(32, 0, 16, 16));
 		entities.add(player);
 		world = new World("/level1.png");
 		
+		menu = new Menu();
 	}
 	
 	public void initFrame() {
-		frame = new JFrame("Zelda Clone");
+		frame = new JFrame("cat vs aliens");
 		frame.add(this);
 		frame.setResizable(false);;
 		frame.pack();
@@ -141,10 +145,13 @@ public class Game extends Canvas implements Runnable, KeyListener {
 				String newWorld = "level" + CUR_LEVEL + ".png";
 				World.restartGame(newWorld);
 			}
+		}else if(gameState == "MENU") {
+			menu.tick();
 		}
 	}
 	
 	public void render() {
+		
 		BufferStrategy bs = this.getBufferStrategy();
 		if(bs == null) {
 			this.createBufferStrategy(3);
@@ -154,8 +161,6 @@ public class Game extends Canvas implements Runnable, KeyListener {
 		g.setColor(new Color(0,0,0));
 		g.fillRect(0,0,WIDTH,HEIGHT);
 		
-		/*Game Rendering*/
-		//Graphics2D g2 = (Graphics2D) g;
 		world.render(g);
 		for(int i = 0; i < entities.size(); i++) {
 			Entity e = entities.get(i);
@@ -174,17 +179,24 @@ public class Game extends Canvas implements Runnable, KeyListener {
 		g.setFont(new Font("arial",Font.BOLD,20));
 		g.setColor(Color.white);
 		g.drawString("Ammo: " + player.ammo,600,35);
+		
+		
 		if(gameState == "GAME_OVER") {
 			Graphics2D g2 = (Graphics2D) g;
 			g2.setColor(new Color(0,0,0,100));
 			g2.fillRect(0, 0, WIDTH * SCALE, HEIGHT * SCALE);
 			g.setFont(new Font("arial",Font.BOLD,36));
 			g.setColor(Color.white);
-			g.drawString("Game Over", (WIDTH * SCALE) / 2 - 90, (HEIGHT * SCALE) / 2 );
+			g.drawString("Game Over", (WIDTH * SCALE) / 2 - 100, (HEIGHT * SCALE) / 2 - 30);
 			g.setFont(new Font("arial",Font.BOLD,26));
 			if(showMessageGameOver)
 				g.drawString(">>Press Enter to restart<<", (WIDTH * SCALE) / 2 - 160, (HEIGHT * SCALE) / 2 + 40);
 		}
+		
+		else if(gameState == "MENU") {
+			menu.render(g);
+		}
+		
 		bs.show();
 	}
 	
@@ -236,13 +248,30 @@ public class Game extends Canvas implements Runnable, KeyListener {
 		if(e.getKeyCode() == KeyEvent.VK_UP ||
 				e.getKeyCode() == KeyEvent.VK_W) {
 			player.up = true;
+			
+			if(gameState == "MENU") {
+				menu.up = true;
+			}
+			
 		}else if(e.getKeyCode() == KeyEvent.VK_DOWN ||
 				e.getKeyCode() == KeyEvent.VK_S) {
 			player.down = true;
+			
+			if(gameState == "MENU") {
+				menu.down = true;
+			}
 		}
 		
 		if(e.getKeyCode() == KeyEvent.VK_ENTER) {
 			this.restartGame = true;
+			if(gameState == "MENU") {
+				menu.enter = true;
+			}
+		}
+		
+		if(e.getKeyCode() == KeyEvent.VK_ESCAPE) {
+			gameState = "MENU";
+			menu.pause = true;
 		}
 	}
 

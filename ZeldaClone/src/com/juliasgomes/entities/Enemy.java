@@ -94,6 +94,7 @@ public class Enemy extends Entity{
 				Game.player.isDamaged = true;
 			}
 		}
+		
 	
 	
 		frames++;
